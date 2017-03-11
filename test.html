@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ReLoader test</title>
+</head>
+<body>
+<h1 role="heading">Hullo?</h1>
+
+<p role="dialog">The page should reload in a moment.</p>
+</body>
+<script type="text/javascript" src="reLoader.js"></script>
+<script type="text/javascript">
+    new ReLoader( {
+        pageReloadTime: 1000
+    }, function ( event ) {
+        console.info( event );
+    } );
+</script>
+</html>
