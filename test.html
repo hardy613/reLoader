@@ -11,10 +11,6 @@
 </body>
 <script type="text/javascript" src="reLoader.js"></script>
 <script type="text/javascript">
-    new ReLoader( {
-        pageReloadTime: 1000
-    }, function ( event ) {
-        console.info( event );
-    } );
+    new ReLoader( {pageReloadTime: 3000}, event => console.info(event));
 </script>
 </html>
