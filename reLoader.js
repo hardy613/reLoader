@@ -163,8 +163,6 @@
          * @since 1.0.0
          */
         init() {
-            this.document.dispatchEvent(this.initializeEvent);
-
             // plugin events
             if (this.options.useDefaultReLoadEventList) {
 
@@ -182,6 +180,9 @@
 
             // user events
             this.options.focusedEventList.map((userFocusedEvent) => this.mapEvent(userFocusedEvent, 'userIsFocused'));
+
+            // done
+            this.document.dispatchEvent(this.initializeEvent);
         };
 
         /**
