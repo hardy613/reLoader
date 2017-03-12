@@ -9,4 +9,4 @@ Reloads a page...
 - useDefaultFocusedEventList    [ default: true ] | Should we use the default list
 
 ## usage
-` new ReLoader(); `
+` new ReLoader( {pageReloadTime: 3000}, event => console.info(event)); `

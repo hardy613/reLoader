@@ -49,7 +49,7 @@
     *  - useDefaultFocusedEventList    [ default: true ] | Should we use the default list
     *
     * @usage
-    *  ` new ReLoader(); `
+    *  ` new ReLoader( {pageReloadTime: 3000}, event => console.info(event)); `
     */
     class ReLoader {
         /**
@@ -80,6 +80,10 @@
              */
             const defaultReLoadEventList = ['onblur'];
 
+            /**
+             *
+             * @since 1.0.0
+             */
             const defaultOptions = {
                 // five minutes in milliseconds
                 pageReloadTime: 300000,
@@ -94,7 +98,10 @@
                 useDefaultFocusedEventList: true,
 
                 // should we merge the default event list
-                useDefaultReLoadEventList: true
+                useDefaultReLoadEventList: true,
+
+                // use the callback in the initialization
+                useInitializationCallback: false,
             };
 
             /**
@@ -141,13 +148,12 @@
              */
             this.focusedCallback = typeof focusedCallback === "function" ? focusedCallback : () => {};
 
+            // add a listener for our event dispatched in init()
             this.document.addEventListener('initialized', (event) => this.userIsFocused(event));
 
             // create an custom init event
             this.initializeEvent = new CustomEvent("initialized", {
-
                 detail: {
-
                     pluginName: "reLoader",
 
                     timestamp: Date.now()
@@ -168,13 +174,11 @@
         init() {
             // plugin events
             if (this.options.useDefaultReLoadEventList) {
-
                 this.options.defaultReLoadEventList.map((reloadEvent) => this.mapEvent(reloadEvent, 'pageReLoad'));
             }
 
             // plugin events
             if (this.options.useDefaultFocusedEventList) {
-
                 this.options.defaultFocusedEventList.map((focusedEvent) => this.mapEvent(focusedEvent, 'userIsFocused'));
             }
 
@@ -196,14 +200,12 @@
          */
         mapEvent(eventName, functionName = 'userIsFocused') {
 
-            if (this.window.hasOwnProperty(eventName)) {
-
-                this.window[eventName] = (event) => this[functionName](event);
-
-            } else {
-
+            if (!this.window.hasOwnProperty(eventName)) {
                 this.reLoaderWarning(eventName)
             }
+
+            // bind anyways... for now..
+            this.window[eventName] = (event) => this[functionName](event);
         };
 
         /**
@@ -212,19 +214,18 @@
          * @param event
          * @since 1.0.0
          */
-        userIsFocused(event = false) {
+        userIsFocused(event = this.initializeEvent) {
 
             if (this.timeOutListener) {
-
                 clearTimeout(this.timeOutListener);
             }
 
-            // make a callback if an even is present
-            if (event) {
-
+            // user callback
+            if(event != this.initializeEvent || (event == this.initializeEvent && this.options.useInitializationCallback)) {
                 this.focusedCallback(event);
             }
 
+            // start timer
             this.timeOutListener = setTimeout(() => this.pageReLoad(), this.options.pageReloadTime);
         };
 
@@ -239,8 +240,11 @@
         };
 
         /**
+         * warn() of a missing window property in the console.
+         *
          * @param event
          * @param message
+         * @todo: investigate 'ontouchstart' in desktop chrome latest, its not a property
          */
         reLoaderWarning(event = this.initializeEvent.name, message = ' is not a property of the window object.') {
             console.warn(event + message);
