@@ -16,7 +16,7 @@
  *
  * @author Scott Hardy <hardy613+ReLoader@gmail.com>
  */
-;(function (root, factory) {
+;((root, factory) => {
 
     // @thanks: http://ifandelse.com/its-not-hard-making-your-library-support-amd-and-commonjs/
     if(typeof define === "function" && define.amd) {
@@ -38,7 +38,7 @@
         root.ReLoader = factory();
     }
 
-}(this, () => {
+})(this, () => {
 
     /**
     * @options
@@ -249,4 +249,4 @@
     }
 
     return ReLoader;
-}));
+});
