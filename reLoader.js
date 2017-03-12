@@ -17,21 +17,24 @@
  * @author Scott Hardy <hardy613+ReLoader@gmail.com>
  */
 ;(function (root, factory) {
+
     // @thanks: http://ifandelse.com/its-not-hard-making-your-library-support-amd-and-commonjs/
     if(typeof define === "function" && define.amd) {
+
         // Now we're wrapping the factory and assigning the return
         // value to the root (window) and returning it as well to
         // the AMD loader.
-        define([], function(){
-            return (root.ReLoader = factory());
-        });
+        define([], () => (root.ReLoader = factory()));
+
     } else if(typeof module === "object" && module.exports) {
+
         // I've not encountered a need for this yet, since I haven't
         // run into a scenario where plain modules depend on CommonJS
         // *and* I happen to be loading in a CJS browser environment
         // but I'm including it for the sake of being thorough
         module.exports = (root.ReLoader = factory());
     } else {
+
         root.ReLoader = factory();
     }
 
