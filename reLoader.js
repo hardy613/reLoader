@@ -219,6 +219,8 @@
 
                 // bind anyways... for now..
                 this.window[eventName] = (event) => this[functionName](event);
+            } else {
+                this.reLoaderError('mapEvent::Error: The eventName must be set.')
             }
         };
 
@@ -268,6 +270,20 @@
         reLoaderWarning(event = this.initializeEvent.name, message = ' is not a property of the window object.') {
 
             console.warn(event + message);
+        };
+
+        /**
+         * error() messages when needed
+         *
+         * @param message
+         * @return void
+         * @since 1.0.1
+         *
+         * @todo: investigate 'ontouchstart' in desktop chrome latest, its not a property
+         */
+        reLoaderError(message = 'reLoader.js: Error') {
+
+            console.error(message);
         };
 
     }
