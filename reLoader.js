@@ -42,20 +42,23 @@
 
     /**
     * @options
-    *  - pageReloadTime                [ default: 300000 ] | The time (in milliseconds) to wait before reloading
-    *  - reLoadEventList               [ default: [] ] | User defined events that cause a reload
-    *  - focusedEventList              [ default: [] ] | User defined events that cause a timer reset
-    *  - useDefaultReLoadEventList     [ default: true ] | Should we use the default list
-    *  - useDefaultFocusedEventList    [ default: true ] | Should we use the default list
+    *  - pageReloadTime                 [ default: 300000 ] | The time (in milliseconds) to wait before reloading
+    *  - reLoadEventList                [ default: [] ] | User defined events that cause a reload
+    *  - focusedEventList               [ default: [] ] | User defined events that cause a timer reset
+    *  - useDefaultReLoadEventList      [ default: true ] | Should we use the default list
+    *  - useDefaultFocusedEventList     [ default: true ] | Should we use the default list
+    *  - useInitializationCallback      [ default: false] | Use user defined callback on init
     *
     * @usage
     *  ` new ReLoader( {pageReloadTime: 3000}, event => console.info(event)); `
     */
     class ReLoader {
         /**
+         * Sets default events for resetting the timer or reloading
+         * Creates initialized event.
          *
          * @param options
-         * @param focusedCallback
+         * @param focusedCallback - the user defined callback used before resetting thh timer
          * @since 1.0.1
          */
         constructor(options, focusedCallback) {
@@ -81,7 +84,6 @@
             const defaultReLoadEventList = ['onblur'];
 
             /**
-             *
              * @since 1.0.0
              */
             const defaultOptions = {
@@ -103,6 +105,10 @@
                 // use the callback in the initialization
                 useInitializationCallback: false,
             };
+
+            if(typeof options !== "object") {
+                options = {};
+            }
 
             /**
              * Create our class options
@@ -172,20 +178,20 @@
          * @since 1.0.0
          */
         init() {
-            // plugin events
+            // plugin reload events
             if (this.options.useDefaultReLoadEventList) {
                 this.options.defaultReLoadEventList.map((reloadEvent) => this.mapEvent(reloadEvent, 'pageReLoad'));
             }
 
-            // plugin events
+            // plugin focused events
             if (this.options.useDefaultFocusedEventList) {
                 this.options.defaultFocusedEventList.map((focusedEvent) => this.mapEvent(focusedEvent, 'userIsFocused'));
             }
 
-            // user events
+            // user reload events
             this.options.reLoadEventList.map((userReloadEvent) => this.mapEvent(userReloadEvent, 'pageReLoad'));
 
-            // user events
+            // user focused events
             this.options.focusedEventList.map((userFocusedEvent) => this.mapEvent(userFocusedEvent, 'userIsFocused'));
 
             // done
@@ -193,13 +199,16 @@
         };
 
         /**
+         * Checks if the event name is a property of the window
+         * throws a warning if not, however it will still
+         * try to bind the event.
          *
          * @param eventName
          * @param functionName
          * @since 1.0.1
          */
         mapEvent(eventName, functionName = 'userIsFocused') {
-
+            // check
             if (!this.window.hasOwnProperty(eventName)) {
                 this.reLoaderWarning(eventName)
             }
@@ -247,6 +256,7 @@
          * @todo: investigate 'ontouchstart' in desktop chrome latest, its not a property
          */
         reLoaderWarning(event = this.initializeEvent.name, message = ' is not a property of the window object.') {
+
             console.warn(event + message);
         };
 
