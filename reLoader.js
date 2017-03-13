@@ -278,8 +278,6 @@
          * @param message
          * @return void
          * @since 1.0.1
-         *
-         * @todo: investigate 'ontouchstart' in desktop chrome latest, its not a property
          */
         reLoaderError(message = 'reLoader.js: Error') {
 
