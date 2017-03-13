@@ -173,8 +173,9 @@
          * Adds events.
          *
          * Adds onblur event to reload the page and adds a default 5 minute timer
-         * to reload teh page unless the user is on the page.
+         * to reload teh page unless the user is on the page. Dispatches Init event
          *
+         * @return void
          * @since 1.0.0
          */
         init() {
@@ -205,22 +206,27 @@
          *
          * @param eventName
          * @param functionName
+         * @return void
          * @since 1.0.1
          */
-        mapEvent(eventName, functionName = 'userIsFocused') {
-            // check
-            if (!this.window.hasOwnProperty(eventName)) {
-                this.reLoaderWarning(eventName)
-            }
+        mapEvent(eventName = '', functionName = 'userIsFocused') {
 
-            // bind anyways... for now..
-            this.window[eventName] = (event) => this[functionName](event);
+            if(eventName.length) {
+                // check
+                if (!this.window.hasOwnProperty(eventName)) {
+                    this.reLoaderWarning(eventName)
+                }
+
+                // bind anyways... for now..
+                this.window[eventName] = (event) => this[functionName](event);
+            }
         };
 
         /**
          * Clears and sets the reload timer
          *
          * @param event
+         * @return void
          * @since 1.0.0
          */
         userIsFocused(event = this.initializeEvent) {
@@ -241,6 +247,7 @@
         /**
          * You guessed it; we reload the page.
          *
+         * @return void
          * @since 1.0.0
          */
         pageReLoad() {
@@ -253,6 +260,9 @@
          *
          * @param event
          * @param message
+         * @return void
+         * @since 1.0.1
+         *
          * @todo: investigate 'ontouchstart' in desktop chrome latest, its not a property
          */
         reLoaderWarning(event = this.initializeEvent.name, message = ' is not a property of the window object.') {
