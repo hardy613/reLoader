@@ -173,7 +173,7 @@
          * Adds events.
          *
          * Adds onblur event to reload the page and adds a default 5 minute timer
-         * to reload teh page unless the user is on the page. Dispatches Init event
+         * to reload the page unless the user is on the page. Dispatches Init event
          *
          * @return void
          * @since 1.0.0
